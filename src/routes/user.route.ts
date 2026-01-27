@@ -1,0 +1,13 @@
+import express from "express";
+import validate from "../middleware/validate.middleware";
+import userController from "../controllers/user.controller";
+import { loginSchema, registerSchema, socialLoginSchema } from "../validations/user.validation";
+
+const userRouter = express.Router();
+
+userRouter.post("/register",validate(registerSchema),userController.register);
+userRouter.post("/login",validate(loginSchema),userController.loginUser);
+userRouter.post("/social-login",validate(socialLoginSchema),userController.socialLogin);
+userRouter.post("/forget-password",userController.forgetPassword);
+
+export default userRouter;
