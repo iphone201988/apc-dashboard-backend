@@ -8,7 +8,7 @@ import { findUserByEmail, findUserBySocialId, userData } from "../services/user.
 
 const socialLogin = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     try {
-        const { name = "", socialId, provider, email, deviceToken, deviceType, avatar } = req.body;
+        const { firstName = "", lastName = "", socialId, provider, email, deviceToken, deviceType} = req.body;
         let user = await findUserBySocialId(socialId, provider);
         const language = "English"
         const lowercaseEmail = email?.toLowerCase();
@@ -18,17 +18,18 @@ const socialLogin = async (req: Request, res: Response, next: NextFunction): Pro
                 user.socialLinkedAccounts.push({ provider, id: socialId });
 
             } else {
+                
                 user = new User({
-                    name,
+                    firstName,
+                    lastName,
                     email: lowercaseEmail,
                     socialLinkedAccounts: [{ provider, id: socialId }],
                     deviceToken,
                     deviceType,
-                    profilePicture: avatar
                 });
             }
         }
-        user.profilePicture = avatar || user.profilePicture;
+        user.profilePicture = user.profilePicture;
         user.deviceToken = deviceToken ?? null;
         user.deviceType = deviceType ?? null;
         await user.save();
@@ -54,7 +55,7 @@ const socialLogin = async (req: Request, res: Response, next: NextFunction): Pro
 
 export const register = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     try {
-        const { name, email, password, deviceToken, deviceType } = req.body;
+        const { firstName,lastName, email, password, deviceToken, deviceType } = req.body;
         const lowercaseEmail = email?.toLowerCase().trim();
         const existingUser = await findUserByEmail(lowercaseEmail);
 
@@ -75,7 +76,8 @@ export const register = async (req: Request, res: Response, next: NextFunction):
         try {
             if (existingUser && !existingUser.isEmailVerified) {
                 Object.assign(existingUser, {
-                    name,
+                    lastName,
+                    firstName,
                     password: hashedPassword,
                     email: lowercaseEmail,
                     otp,
@@ -88,7 +90,7 @@ export const register = async (req: Request, res: Response, next: NextFunction):
             } else {
 
                 user = await User.create({
-                    name,
+                    firstName,lastName,
                     email: lowercaseEmail,
                     password: hashedPassword,
                     otp,
@@ -293,14 +295,14 @@ const loginUser = async (
 
 export const updateProfile = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { userId } = req;
-        const { name, dob, address, profilePicture } = req.body;
+        const { firstName, lastName, dob, address, profilePicture } = req.body;
+        const userId = req.user?._id;
         const user: IUser = await User.findById(userId);
         if (!user) {
             return next(new ErrorHandler("User not found", 404));
         }
-        if (name !== undefined) user.name = name;
-        // if (lastName !== undefined) user.lastName = lastName;
+        if (firstName !== undefined) user.firstName = firstName;
+        if (lastName !== undefined) user.lastName = lastName;
         if (dob !== undefined) user.dob = new Date(dob);
         if (address !== undefined) user.address = address;
         if (profilePicture !== undefined) user.profilePicture = profilePicture
@@ -454,7 +456,7 @@ export const resendOtp = async (req: Request, res: Response, next: NextFunction)
         if (!user) {
             return next(new ErrorHandler("User Not Found", 404))
         }
-        if (type === 1) {
+        if (type === 1 || type == "1") {
             if (user.isEmailVerified) {
                 return next(new ErrorHandler("User does not exist or email not verified.", 400))
             }
@@ -467,7 +469,8 @@ export const resendOtp = async (req: Request, res: Response, next: NextFunction)
             await sendEmail({
                 userEmail: lowercaseEmail,
                 subject: "Verify Your Account",
-                text: `Your verification code is ${otp}. It expires in 10 minutes.`,
+                // text: `Your verification code is ${otp}. It expires in 10 minutes.`,
+                text:"",
                 html: `
     <div style="font-family: Arial, sans-serif; color: #333;">
       <h2>Verify Your Account</h2>
@@ -544,7 +547,8 @@ export const getUserStatsProfile = async (req: Request, res: Response) => {
         }
         const filteredData: any = {
             _id: user._id,
-            name: user.name,
+            firstName: user.firstName,
+            lastName: user.lastName,
             profilePicture: user.profilePicture,
         };
         return res.status(200).json({

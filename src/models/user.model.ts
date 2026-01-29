@@ -40,12 +40,12 @@ import { AccountStatus, deviceType, SocialLoginType } from "../utils/enums";
                 type: String,
                 ref: 'Subscription',
             },
-            name: {
+            firstName: {
                 type: String,
             },
-            // lastName: {
-            //   type: String,
-            // },
+            lastName: {
+                type: String,
+            },
             preferredLanguage: {
                 type: String
             },
@@ -67,7 +67,6 @@ import { AccountStatus, deviceType, SocialLoginType } from "../utils/enums";
         },
         { timestamps: true }
     );
-    userSchema.index({ location: "2dsphere" });
     const User = model<IUser>("User", userSchema);
 
     export default User;

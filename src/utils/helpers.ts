@@ -25,7 +25,8 @@ export const SUCCESS = (
   return res.status(status).json({
     success: true,
     message,
-    ...(data ? data : {}),
+    data: data || {},
+    // data: data || {},
   });
 };
 export const signToken = (payload: any) => jwt.sign(payload, process.env.JWT_SECRET as string, { expiresIn: '7d' });

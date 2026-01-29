@@ -25,8 +25,8 @@ export interface IUser extends Document {
     profilePicture?: string;
     status?: string;
     address: string,
-    name?: string;
-    // lastName?: string
+    firstName?: string;
+    lastName?: string
     dob?: Date;
     isEmailVerified?: boolean;
     role?: number;

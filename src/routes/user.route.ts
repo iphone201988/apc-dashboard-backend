@@ -9,5 +9,8 @@ userRouter.post("/register",validate(registerSchema),userController.register);
 userRouter.post("/login",validate(loginSchema),userController.loginUser);
 userRouter.post("/social-login",validate(socialLoginSchema),userController.socialLogin);
 userRouter.post("/forget-password",userController.forgetPassword);
+userRouter.post("/reset-password",userController.resetPassword);
+userRouter.get("/profile",userController.getProfile);
+userRouter.put("/profile",userController.updateProfile);
 
 export default userRouter;

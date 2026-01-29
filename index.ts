@@ -3,7 +3,6 @@ import "dotenv/config";
 import cors from "cors";
 import path from "path";
 import http from "http";
-import mongoose from "mongoose"; // Add this import for closing the DB connection
 import { errorMiddleware } from "./src/middleware/errorHandler.middlerware";
 import { connectToDB } from "./src/utils/helpers";
 import router from "./src/routes";
@@ -23,25 +22,9 @@ connectToDB()
   .then(() => {
     console.log("Connected to DB successfully", process.env.MONGO_URI);
 
-    const server = http.createServer(app);
-    server.listen(port, () => {
+    http.createServer(app).listen(port, () => {
       console.log(`HTTP Server on ${port}`);
     });
-
-    // Graceful shutdown
-    const shutdown = () => {
-      console.log("Shutting down server...");
-      server.close(() => {
-        console.log("HTTP server closed.");
-        mongoose.connection.close(false, () => {
-          console.log("MongoDB connection closed.");
-          process.exit(0);
-        });
-      });
-    };
-
-    process.on("SIGINT", shutdown);
-    process.on("SIGTERM", shutdown);
   })
   .catch((error) => {
     console.log("Error connecting to DB", error);

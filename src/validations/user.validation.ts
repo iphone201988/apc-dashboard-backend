@@ -2,11 +2,16 @@ import Joi from "joi";
 
 export const registerSchema = {
     body: Joi.object({
-        // name: Joi.string().trim().min(2).max(50).required().messages({
-        //     "string.empty": "Name is required",
-        //     "string.min": "Name must be at least 2 characters long",
-        //     "any.required": "Name is required",
-        // }),
+        lastName: Joi.string().trim().min(2).max(50).required().messages({
+            "string.empty": "lastName is required",
+            "string.min": "lastName must be at least 2 characters long",
+            "any.required": "lastName is required",
+        }),
+        firstName: Joi.string().trim().min(2).max(50).required().messages({
+            "string.empty": "firstName is required",
+            "string.min": "firstName must be at least 2 characters long",
+            "any.required": "firstName is required",
+        }),
 
         // dob: Joi.date().iso().less("now").required().messages({
         //     "date.base": "Date of birth must be a valid date",
