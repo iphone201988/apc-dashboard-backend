@@ -1,4 +1,5 @@
 import Joi from "joi";
+import { roleType } from "../utils/enums";
 
 export const registerSchema = {
     body: Joi.object({
@@ -356,3 +357,12 @@ export const socialLoginSchema = {
             }),
     }),
 };
+
+
+export const updateUserRole = {
+    body: Joi.object({
+        role: Joi.number().required().valid(...Object.values(roleType)),
+        userId: Joi.string().required()
+    })
+
+}

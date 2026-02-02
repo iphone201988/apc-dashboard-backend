@@ -53,6 +53,8 @@ const socialLogin = async (req: Request, res: Response, next: NextFunction): Pro
     }
 }
 
+
+
 export const register = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     try {
         const { firstName,lastName, email, password, deviceToken, deviceType } = req.body;
@@ -565,6 +567,87 @@ export const getUserStatsProfile = async (req: Request, res: Response) => {
 };
 
 
+
+export const getAllUsers = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<any> => {
+    try {
+        const { search, role, page = 1, limit = 10 } = req.query;
+
+        const filter: any = {
+            isDeleted: false,
+        };
+
+        if (search) {
+            filter.$or = [
+                { firstName: { $regex: search, $options: "i" } },
+                { lastName: { $regex: search, $options: "i" } },
+                { email: { $regex: search, $options: "i" } },
+            ];
+        }
+
+        if (role !== undefined) {
+            filter.role = Number(role);
+        }
+
+        const skip = (Number(page) - 1) * Number(limit);
+
+        const [users, total] = await Promise.all([
+            User.find(filter)
+                .select("-password -otp -otpExpiry -jti")
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(Number(limit)),
+            User.countDocuments(filter),
+        ]);
+
+        return SUCCESS(res, 200, "Users fetched successfully", {
+            users,
+            pagination: {
+                total,
+                page: Number(page),
+                limit: Number(limit),
+                totalPages: Math.ceil(total / Number(limit)),
+            },
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const changeUserRole = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+): Promise<any> => {
+    try {
+        const { userId, role } = req.body;
+
+        if (role === undefined) {
+            return next(new ErrorHandler("Role is required", 400));
+        }
+
+        const user = await User.findById(userId);
+
+        if (!user || user.isDeleted) {
+            return next(new ErrorHandler("User not found", 404));
+        }
+
+        user.role = Number(role);
+        await user.save();
+
+        return SUCCESS(res, 200, "User role updated successfully", {
+            user: userData(user),
+        });
+    } catch (error) {
+        next(error);
+    }
+};
+
+
+
 export default {
     register,
     verifyUserEmail,
@@ -578,5 +661,7 @@ export default {
     socialLogin,
     resendOtp,
     getProfile,
-    getUserStatsProfile
+    getUserStatsProfile,
+    getAllUsers,
+    changeUserRole
 }

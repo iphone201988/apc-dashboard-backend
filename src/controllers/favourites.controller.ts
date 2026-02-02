@@ -23,24 +23,48 @@ export const createFavouriteCategory = async (req: Request, res: Response, next:
         next(err)
     }
 }
-export const getAllFavouriteCategories = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const search = req.query.search
-        let filter = {}
-        if (search) {
-            filter = {
-                $or: [
-                    { title: { $regex: search, $options: "i" } },
-                    { description: { $regex: search, $options: "i" } }
-                ]
-            }
-        }
-        const categories = await FavouriteCategoryModel.find(filter);
-        return SUCCESS(res, 200, "Successfully fetched favourite categories", { categories })
-    } catch (err) {
-        next(err);
+export const getAllFavouriteCategories = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const search = req.query.search as string;
+
+    let filter: any = {};
+    if (search) {
+      filter = {
+        $or: [
+          { title: { $regex: search, $options: "i" } },
+          { description: { $regex: search, $options: "i" } }
+        ]
+      };
     }
-}
+
+    const categories = await FavouriteCategoryModel.find(filter).lean();
+
+    const categoriesWithItems = await Promise.all(
+      categories.map(async (category) => {
+        const items =
+          await FavouriteItemModel.find({ categoryId: category._id }) || [];
+
+        return {
+          ...category,
+          items
+        };
+      })
+    );
+
+    return SUCCESS(
+      res,
+      200,
+      "Successfully fetched favourite categories",
+      { categories: categoriesWithItems }
+    );
+  } catch (err) {
+    next(err);
+  }
+};
 
 export const createFavouriteItem = async (req: Request, res: Response, next: NextFunction) => {
     try {

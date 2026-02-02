@@ -5,7 +5,10 @@ import { IFavouriteCategory } from "../types/favourite.types";
 const favouriteCategorySchema= new Schema<IFavouriteCategory>(
     {
         title:{type:String,required:true},
-        description:{type:String}
+        description:{type:String},
+        themeColor:{
+            type:String,
+        }
     },
     { timestamps: true }
 

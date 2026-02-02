@@ -6,9 +6,10 @@ export enum AccountStatus {
   }
 
 
-  export const roleType={
-    USER:1,
-    ADMIN:2
+  export enum roleType {
+    USER=1,
+    ADMIN=2,
+    LEAD=3
 }
 
 export const SocialLoginType = {
@@ -21,6 +22,43 @@ export const deviceType = {
     IOS: 1,
     ANDROID: 2,
 };
+
+export enum speciality {
+    Audiology= "Audiology",
+    Cardiology= "Cardiology",
+    Colorectal_Surgeon= "Colorectal_Surgeon",
+    Dental= "Dental",
+    Dermatology= "Dermatology",
+    ENT= "ENT",
+    Endocrinology= "Endocrinology",
+    Gastroenterology= "Gastroenterology",
+    General_Surgery= "General_Surgery",
+    Gynecology= "Gynecology",
+    IV_Infusions= "IV_Infusions",
+    Neorolgy= "Neorolgy",
+    Nephrology= "Nephrology",
+    Neurology= "Neurology",
+    Oncology= "Oncology",
+    Oncology_Breast= "Oncology_Breast",
+    Opthalmology= "Opthalmology",
+    Optometry= "Optometry",
+    Orthopedic_Surgery= "Orthopedic_Surgery",
+    Pain_Management= "Pain_Management",
+    Podiatry= "Podiatry",
+    Psychiatry= "Psychiatry",
+    Psycology= "Psycology",
+    Pulmonology= "Pulmonology",
+    Rheumatology= "Rheumatology",
+    Thorasic_Surgeon= "Thorasic_Surgeon",
+    Uro_Gynecology= "Uro_Gynecology",
+    Urology= "Urology",
+    Vascular_Surgeon= "Vascular_Surgeon",
+};
+
+export enum type{
+    MOBILE="mobile",
+    OUTPATIENT="patient"
+}
 
 
 
