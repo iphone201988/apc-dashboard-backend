@@ -16,5 +16,6 @@ userRouter.put("/profile",userController.updateProfile);
 userRouter.post("/verify-email",userController.verifyUserEmail);
 userRouter.get("/all",authMiddleware,userController.getAllUsers);
 userRouter.post("/update-role",validate(updateUserRole),authMiddleware,userController.changeUserRole)
+userRouter.post('/logout', authMiddleware , userController.accountLogout)
 
 export default userRouter;

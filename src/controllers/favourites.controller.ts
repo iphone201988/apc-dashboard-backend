@@ -68,7 +68,8 @@ export const getAllFavouriteCategories = async (
 
 export const createFavouriteItem = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { icon, categoryId, title, link, description } = req.body;
+        const {  categoryId, title, link, description } = req.body;
+        const icon = req.file?`uploads/${req.file?.filename}`: null;
         const category = await FavouriteCategoryModel.findById(categoryId);
         if (!category) {
             return res.status(404).json({
