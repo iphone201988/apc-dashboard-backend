@@ -4,11 +4,11 @@ import { IUser } from "../user.types";
 
 declare module "express-serve-static-core" {
   interface Request {
-    user?: IUser;
-    userId?: Types.ObjectId | string;
-    language?: string;
+    user?: any;
+    userId?: any;
+    language?: any;
     file?: any;
-    files?: File[] | { [fieldname: string]: File[] };
+    files?:any
   }
 }
 

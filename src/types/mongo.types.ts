@@ -1,4 +1,4 @@
-import mongoose, { Types } from "mongoose";
+import mongoose, { Document, Types } from "mongoose";
 
 export interface IComboGoal extends Document {
   userId: Types.ObjectId;

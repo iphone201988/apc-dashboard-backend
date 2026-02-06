@@ -431,7 +431,7 @@ const accountLogout = async (
 ): Promise<any> => {
   try {
     const userId = req.userId;
-    const user = await User.findById(userId);
+    const user:any = await User.findById(userId);
     if (!user) {
       throw new ErrorHandler("User does not exist or email not verified", 404);
     }
