@@ -24,52 +24,52 @@ export const createFavouriteCategory = async (req: Request, res: Response, next:
     }
 }
 export const getAllFavouriteCategories = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
+    req: Request,
+    res: Response,
+    next: NextFunction
 ) => {
-  try {
-    const search = req.query.search as string;
+    try {
+        const search = req.query.search as string;
 
-    let filter: any = {};
-    if (search) {
-      filter = {
-        $or: [
-          { title: { $regex: search, $options: "i" } },
-          { description: { $regex: search, $options: "i" } }
-        ]
-      };
+        let filter: any = {};
+        if (search) {
+            filter = {
+                $or: [
+                    { title: { $regex: search, $options: "i" } },
+                    { description: { $regex: search, $options: "i" } }
+                ]
+            };
+        }
+
+        const categories = await FavouriteCategoryModel.find(filter).lean();
+
+        const categoriesWithItems = await Promise.all(
+            categories.map(async (category) => {
+                const items =
+                    await FavouriteItemModel.find({ categoryId: category._id }) || [];
+
+                return {
+                    ...category,
+                    items
+                };
+            })
+        );
+
+        return SUCCESS(
+            res,
+            200,
+            "Successfully fetched favourite categories",
+            { categories: categoriesWithItems }
+        );
+    } catch (err) {
+        next(err);
     }
-
-    const categories = await FavouriteCategoryModel.find(filter).lean();
-
-    const categoriesWithItems = await Promise.all(
-      categories.map(async (category) => {
-        const items =
-          await FavouriteItemModel.find({ categoryId: category._id }) || [];
-
-        return {
-          ...category,
-          items
-        };
-      })
-    );
-
-    return SUCCESS(
-      res,
-      200,
-      "Successfully fetched favourite categories",
-      { categories: categoriesWithItems }
-    );
-  } catch (err) {
-    next(err);
-  }
 };
 
 export const createFavouriteItem = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const {  categoryId, title, link, description } = req.body;
-        const icon = req.file?`uploads/${req.file?.filename}`: null;
+        const { categoryId, title, link, description } = req.body;
+        const icon = req.file ? `uploads/${req.file?.filename}` : null;
         const category = await FavouriteCategoryModel.findById(categoryId);
         if (!category) {
             return res.status(404).json({
@@ -150,7 +150,12 @@ export const updateFavouriteItem = async (req: Request, res: Response, next: Nex
         if (title) item.title = title;
         if (link) item.link = link;
         if (description) item.description = description;
-        if (icon) item.icon = icon;
+
+        const iconPath = req.file ? `uploads/${req.file.filename}` : null;
+        if (iconPath) item.icon = iconPath;
+        // Keep existing icon if no new file is uploaded, effectively ignoring req.body.icon if we want to enforce file upload for updates or we handle mixed logic. 
+        // But to be consistent with creating item, we prefer file upload. 
+        // If req.body.icon is sent (e.g. as string), we might want to allow it depending on use case, but usually file upload overrides.
 
         await item.save();
         return SUCCESS(res, 200, "Successfully updated favourite item", item)
