@@ -31,22 +31,66 @@ export const getAllFavouriteCategories = async (
     try {
         const search = req.query.search as string;
 
-        let filter: any = {};
+        let categoryIds: any[] = [];
+        let categoryFilter: any = {};
+
         if (search) {
-            filter = {
+            // Search in items (title and description)
+            const matchingItems = await FavouriteItemModel.find({
                 $or: [
                     { title: { $regex: search, $options: "i" } },
                     { description: { $regex: search, $options: "i" } }
                 ]
-            };
+            }).select('categoryId').lean();
+
+            // Get unique category IDs from matching items
+            const itemCategoryIds = [...new Set(matchingItems.map(item => item.categoryId.toString()))];
+
+            // Search in categories (title and description)
+            const matchingCategories = await FavouriteCategoryModel.find({
+                $or: [
+                    { title: { $regex: search, $options: "i" } },
+                    { description: { $regex: search, $options: "i" } }
+                ]
+            }).select('_id').lean();
+
+            const categoryCategoryIds = matchingCategories.map(cat => cat._id.toString());
+
+            // Combine both sets of category IDs
+            categoryIds = [...new Set([...itemCategoryIds, ...categoryCategoryIds])];
+
+            // Filter to only include categories that match
+            if (categoryIds.length > 0) {
+                categoryFilter = { _id: { $in: categoryIds } };
+            } else {
+                // No matches found, return empty
+                return SUCCESS(
+                    res,
+                    200,
+                    "Successfully fetched favourite categories",
+                    { categories: [] }
+                );
+            }
         }
 
-        const categories = await FavouriteCategoryModel.find(filter).lean();
+        const categories = await FavouriteCategoryModel.find(categoryFilter).lean();
 
         const categoriesWithItems = await Promise.all(
             categories.map(async (category) => {
-                const items =
-                    await FavouriteItemModel.find({ categoryId: category._id }) || [];
+                let itemFilter: any = { categoryId: category._id };
+
+                // If searching, filter items to only show matching ones
+                if (search) {
+                    itemFilter = {
+                        categoryId: category._id,
+                        $or: [
+                            { title: { $regex: search, $options: "i" } },
+                            { description: { $regex: search, $options: "i" } }
+                        ]
+                    };
+                }
+
+                const items = await FavouriteItemModel.find(itemFilter) || [];
 
                 return {
                     ...category,
@@ -55,11 +99,16 @@ export const getAllFavouriteCategories = async (
             })
         );
 
+        // Filter out categories with no items when searching
+        const filteredCategories = search
+            ? categoriesWithItems.filter(cat => cat.items.length > 0)
+            : categoriesWithItems;
+
         return SUCCESS(
             res,
             200,
             "Successfully fetched favourite categories",
-            { categories: categoriesWithItems }
+            { categories: filteredCategories }
         );
     } catch (err) {
         next(err);

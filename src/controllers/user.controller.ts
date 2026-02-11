@@ -431,7 +431,7 @@ const accountLogout = async (
 ): Promise<any> => {
   try {
     const userId = req.userId;
-    const user:any = await User.findById(userId);
+    const user: any = await User.findById(userId);
     if (!user) {
       throw new ErrorHandler("User does not exist or email not verified", 404);
     }
@@ -545,7 +545,7 @@ export const getProfile = async (
   next: NextFunction,
 ) => {
   try {
-    const userId = (req as any).user?.id;
+    const userId = (req as any).userId || (req as any).user?._id;
     if (!userId) throw new ErrorHandler("Unauthorized", 401);
 
     const user: IUser | null = await User.findById(userId).select(

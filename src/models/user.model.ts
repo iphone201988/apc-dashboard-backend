@@ -62,10 +62,10 @@ const userSchema = new Schema<IUser>(
             type: Boolean,
             default: true
         },
-        role:{
-            type:Number,
-            default:roleType.USER,
-            enum:roleType
+        role: {
+            type: Number,
+            default: roleType.USER,
+            enum: roleType
         }
 
 
