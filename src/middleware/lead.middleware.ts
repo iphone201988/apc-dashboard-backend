@@ -4,7 +4,8 @@ import { roleType } from "../utils/enums";
 const leadMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const role=req?.user?.role;
-        if(role!==roleType.ADMIN || role!==roleType.LEAD){
+        console.log(role,"roleType../.");
+        if(role!==roleType.ADMIN && role!==roleType.LEAD){
             return res.status(400).json({
                 message: "Only Admin or Lead can Perform this action",
                 success: false

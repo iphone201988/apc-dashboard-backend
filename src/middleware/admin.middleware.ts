@@ -4,6 +4,9 @@ import { roleType } from "../utils/enums";
 const adminMiddleware = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const role=req?.user?.role;
+        console.log("req.user...",req.user)
+        console.log("role...",role)
+        console.log("roleType.ADMIN...",roleType.ADMIN)
         if(role!==roleType.ADMIN){
             return res.status(400).json({
                 message: "Only Admin can Perform this action",

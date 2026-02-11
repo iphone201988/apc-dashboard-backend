@@ -23,6 +23,7 @@ const authMiddleware = async (req: Request, res: Response, next: NextFunction) =
         }
 
         const user = await User.findById(decoded.id);
+        console.log("user...",user)
         if (!user) {
             return res.status(401).json({
                 message: "UNAUTHORIZED",
