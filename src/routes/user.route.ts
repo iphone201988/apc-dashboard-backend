@@ -3,6 +3,7 @@ import validate from "../middleware/validate.middleware";
 import userController from "../controllers/user.controller";
 import { loginSchema, registerSchema, socialLoginSchema, updateUserRole } from "../validations/user.validation";
 import authMiddleware from "../middleware/auth.middleware";
+import adminMiddleware from "../middleware/admin.middleware";
 
 const userRouter = express.Router();
 
@@ -15,7 +16,7 @@ userRouter.get("/profile", authMiddleware, userController.getProfile);
 userRouter.put("/profile", authMiddleware, userController.updateProfile);
 userRouter.post("/verify-email", userController.verifyUserEmail);
 userRouter.get("/all", authMiddleware, userController.getAllUsers);
-userRouter.post("/update-role", validate(updateUserRole), authMiddleware, userController.changeUserRole)
+userRouter.post("/update-role", validate(updateUserRole),adminMiddleware, authMiddleware, userController.changeUserRole)
 userRouter.post('/logout', authMiddleware, userController.accountLogout)
 
 export default userRouter;

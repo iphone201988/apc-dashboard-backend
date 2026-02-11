@@ -5,14 +5,15 @@ import { createFavouriteCategoryScehma, createFavouriteItemSchema, deleteFavouri
 import favouritesController from "../controllers/favourites.controller";
 import { create } from "node:domain";
 import { upload } from "../middleware/multer.middleware";
+import leadMiddleware from "../middleware/lead.middleware";
 
 const favouriteRouter = express.Router();
 
-favouriteRouter.post("/create-category", authMiddleware, validate(createFavouriteCategoryScehma), favouritesController.createFavouriteCategory);
+favouriteRouter.post("/create-category", authMiddleware,leadMiddleware, validate(createFavouriteCategoryScehma), favouritesController.createFavouriteCategory);
 favouriteRouter.get("/categories", authMiddleware, validate(getAllFavouriteCategoriesSchema), favouritesController.getAllFavouriteCategories);
-favouriteRouter.post("/create-item", upload.single('image'), authMiddleware, validate(createFavouriteItemSchema), favouritesController.createFavouriteItem);
+favouriteRouter.post("/create-item", upload.single('image'),leadMiddleware, authMiddleware, validate(createFavouriteItemSchema), favouritesController.createFavouriteItem);
 favouriteRouter.get("/items", authMiddleware, validate(getAllFavouriteItemsSchema), favouritesController.getAllFavouriteItems);
-favouriteRouter.post("/delete-item", authMiddleware, validate(deleteFavouriteItemSchema), favouritesController.deleteFavouriteItem);
-favouriteRouter.put("/update-item", upload.single('image'), authMiddleware, validate(updateFavouriteItemSchema), favouritesController.updateFavouriteItem);
+favouriteRouter.post("/delete-item", authMiddleware,leadMiddleware, validate(deleteFavouriteItemSchema), favouritesController.deleteFavouriteItem);
+favouriteRouter.put("/update-item", upload.single('image'), authMiddleware,leadMiddleware, validate(updateFavouriteItemSchema), favouritesController.updateFavouriteItem);
 
 export default favouriteRouter;

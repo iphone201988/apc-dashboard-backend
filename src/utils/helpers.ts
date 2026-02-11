@@ -38,9 +38,9 @@ export interface IsendEmail {
 }
 
 let transporter = nodemailer.createTransport({
-  host: "smtp-mail.outlook.com",  
-  port: 587,
-  secure: false,
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
   auth: {
     user: process.env.SMTP_EMAIL,
     pass: process.env.SMTP_PASSWORD,

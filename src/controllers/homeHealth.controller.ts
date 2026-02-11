@@ -19,10 +19,10 @@ const createHomeHealth = async (req: Request, res: Response, next: NextFunction)
 
 const getAllHomeHealth = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { search, agency, insurance, page = 1, limit = 10 } = req.query;
-        const pageNumber = parseInt(page as string) || 1;
-        const limitNumber = parseInt(limit as string) || 10;
-        const skip = (pageNumber - 1) * limitNumber;
+        const { search, agency, insurance, page, limit } = req.query;
+        // const pageNumber = parseInt(page as string);    
+        // const limitNumber = parseInt(limit as string);
+        // const skip = (pageNumber - 1) * limitNumber;
 
         let filter = {};
         if (search) {
@@ -40,19 +40,19 @@ const getAllHomeHealth = async (req: Request, res: Response, next: NextFunction)
         if (insurance) {
             filter = { ...filter, insurance: insurance }
         }
-        const homeHealthEntries = await homeHealthModel.find(filter).skip(skip).limit(limitNumber);
+        const homeHealthEntries = await homeHealthModel.find(filter);
         const totalDocs = await homeHealthModel.countDocuments(filter);
 
         return res.status(200).json({
             message: "Home Health entries fetched successfully",
             success: true,
             data: homeHealthEntries,
-            pagination: {
-                totalDocs,
-                totalPages: Math.ceil(totalDocs / limitNumber),
-                currentPage: pageNumber,
-                limit: limitNumber
-            }
+            // pagination: {
+            //     totalDocs,
+            //     totalPages: Math.ceil(totalDocs / limitNumber),
+            //     currentPage: pageNumber,
+            //     limit: limitNumber
+            // }
         });
     } catch (error) {
         next(error);
