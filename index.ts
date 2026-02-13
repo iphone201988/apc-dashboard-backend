@@ -15,9 +15,9 @@ app.use(express.json());
 app.use(cors());
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 const options = {
-  key: fs.readFileSync(path.resolve(__dirname, "./src/ssl/private.key"), 'utf8'),
-  cert: fs.readFileSync(path.resolve(__dirname, "./src/ssl/certificate.crt"), 'utf8'),
-  ca: fs.readFileSync(path.resolve(__dirname, "./src/ssl/ca_bundle.crt"), 'utf8'),
+  key: fs.readFileSync(path.resolve(__dirname, "../ssl/private.key"), 'utf8'),
+  cert: fs.readFileSync(path.resolve(__dirname, "../ssl/certificate.crt"), 'utf8'),
+  ca: fs.readFileSync(path.resolve(__dirname, "../ssl/ca_bundle.crt"), 'utf8'),
 };
 app.use("/api/v1", router);
 
