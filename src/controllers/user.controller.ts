@@ -607,7 +607,7 @@ export const getAllUsers = async (
       ];
     }
 
-    if (role !== undefined) {
+    if (role !== undefined && role !== "") {
       filter.role = Number(role);
     }
 
