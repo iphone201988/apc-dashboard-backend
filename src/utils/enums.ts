@@ -15,8 +15,8 @@ export enum AccountStatus {
 export const SocialLoginType = {
     APPLE: 1,
     GOOGLE: 2,
-    // X: 3,
-}
+    MICROSOFT: 3,
+} as const;
 
 export const deviceType = {
     IOS: 1,

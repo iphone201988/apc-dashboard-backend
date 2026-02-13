@@ -2,24 +2,24 @@ import { Document } from "mongoose";
 import { IPersonalBest } from "./mongo.types";
 
 export interface ISocialLinkedAccount {
-    provider: 1 | 2;
+    provider: 1 | 2 | 3;
     id: string;
 }
 
 export interface IUser extends Document {
-    personalBest:IPersonalBest
-    skin:string,
+    personalBest: IPersonalBest
+    skin: string,
     statVisibility?: {
-        showTimeTricking?:boolean
+        showTimeTricking?: boolean
         showTrickingLevel?: boolean;
         showFavouriteTrick?: boolean;
         showBestTrick?: boolean;
         showPBs?: boolean;
         showTimeSubscribed?: boolean;
-        showMostPracticedTrick?:boolean
+        showMostPracticedTrick?: boolean
     };
-    bestTrick?:string
-    favouriteTrick?:string
+    bestTrick?: string
+    favouriteTrick?: string
     phone?: string;
     countryCode?: string;
     profilePicture?: string;
@@ -64,5 +64,5 @@ export interface IUser extends Document {
     notificationAlert?: boolean
     sesionReminderAlert?: boolean
     newVideoAlert?: boolean;
-    clipReviews?:number
+    clipReviews?: number
 }

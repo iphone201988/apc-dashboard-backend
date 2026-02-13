@@ -10,12 +10,12 @@ import facultyPreferenceRouter from "./facultyPreference.route";
 import woundCareRouter from "./woundCare.route";
 const router = express.Router();
 
-router.use("/auth",userRouter)
-router.use("/favourites",favouriteRouter);
-router.use("/home-health",homeHealthRouter)
-router.use("/dme",dmeRouter)
-router.use("/referrals",referralsRouter)
-router.use("/hospice",hospiceRouter)
-router.use("/faculty-preferences",facultyPreferenceRouter)
-router.use("/wound-care",woundCareRouter)
+router.use("/auth", userRouter);
+router.use("/favourites", favouriteRouter);
+router.use("/home-health", homeHealthRouter);
+router.use("/dme", dmeRouter);
+router.use("/referrals", referralsRouter);
+router.use("/hospice", hospiceRouter);
+router.use("/faculty-preferences", facultyPreferenceRouter);
+router.use("/wound-care", woundCareRouter);
 export default router;

@@ -8,7 +8,7 @@ const userSchema = new Schema<IUser>(
         countryCode: { type: String },
         profilePicture: { type: String },
         isEmailVerified: { type: Boolean, default: false },
-        socialLinkedAccounts: [{ provider: { type: Number, enum: [SocialLoginType.APPLE, SocialLoginType.GOOGLE] }, id: { type: String } }],
+        socialLinkedAccounts: [{ provider: { type: Number, enum: [1, 2, 3] }, id: { type: String } }],
         email: { type: String },
         password: { type: String },
         language: {
