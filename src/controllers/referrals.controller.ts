@@ -14,10 +14,10 @@ export const createReferrals = async (req: Request, res: Response, next: NextFun
                 referrals
             });
         }
-        const referral = await referralsModel.create({ speciality, type, provider, company, comments: "" });
+        const referral = await referralsModel.create({ speciality, type, provider, company, comments });
         return res.status(201).json({
             message: "Referral entry created successfully",
-            success: true,
+            success: true,              
             data: referral
         });
     } catch (error) {
