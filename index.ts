@@ -1,3 +1,4 @@
+// Force restart
 import express, { Request, Response } from "express";
 import "dotenv/config";
 import cors from "cors";
@@ -31,7 +32,7 @@ connectToDB()
     // http.createServer(app).listen(port, () => {
     //   console.log(`HTTP Server on ${port}`);
     // });
-     https.createServer(options, app).listen(8000, () => {
+    https.createServer(options, app).listen(8000, () => {
       console.log("HTTPS Server on 8000");
     });
   })

@@ -6,6 +6,7 @@ import { SUCCESS } from "../utils/helpers";
 
 export const createReferrals = async (req: Request, res: Response, next: NextFunction) => {
     try {
+        console.log("createReferrals");
         const { speciality, type, provider, company, comments = "" } = req.body;
         const referrals = await referralsModel.findOne({ speciality, type, provider, company });
         if (referrals) {

@@ -5,11 +5,11 @@ import { speciality, type } from "../utils/enums";
 
 const referralsSchema = new Schema<IReferrals>({
     speciality: {
-        type: String, enum: speciality,
+        type: String,
         required: true
     },
     type: {
-        type: String,enum:type,
+        type: String, enum: type,
         required: true
     },
     provider: {

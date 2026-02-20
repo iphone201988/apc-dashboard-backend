@@ -1,10 +1,10 @@
 import Joi from "joi";
-import { speciality, type } from "../utils/enums";
+import { type } from "../utils/enums";
 
 export const createReferralSchema = {
     body: Joi.object({
         speciality: Joi.string()
-            .valid(...Object.values(speciality))
+            .trim()
             .required(),
 
         type: Joi.string()
@@ -35,7 +35,7 @@ export const getAllReferralsSchema = {
             .optional(),
 
         speciality: Joi.string()
-            .valid(...Object.values(speciality))
+            .trim()
             .optional(),
 
         type: Joi.string()
@@ -50,7 +50,7 @@ export const updateReferralSchema = {
             .required(),
 
         speciality: Joi.string()
-            .valid(...Object.values(speciality))
+            .trim()
             .optional(),
 
         type: Joi.string()
