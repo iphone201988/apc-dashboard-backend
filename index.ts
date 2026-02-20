@@ -29,12 +29,12 @@ connectToDB()
   .then(() => {
     console.log("Connected to DB successfully", process.env.MONGO_URI);
 
-    http.createServer(app).listen(port, () => {
-      console.log(`HTTP Server on ${port}`);
-    });
-    // https.createServer(options, app).listen(8000, () => {
-    //   console.log("HTTPS Server on 8000");
+    // http.createServer(app).listen(port, () => {
+    //   console.log(`HTTP Server on ${port}`);
     // });
+    https.createServer(options, app).listen(8000, () => {
+      console.log("HTTPS Server on 8000");
+    });
   })
   .catch((error) => {
     console.log("Error connecting to DB", error);
