@@ -15,6 +15,14 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+try {
+  const options = {
+  key: fs.readFileSync("/etc/letsencrypt/live/portal.artisandoc.com/privkey.pem"),
+  cert: fs.readFileSync("/etc/letsencrypt/live/portal.artisandoc.com/fullchain.pem"),
+};
+} catch (error) {
+  console.log("error...",error)
+}
 const options = {
   key: fs.readFileSync("/etc/letsencrypt/live/portal.artisandoc.com/privkey.pem"),
   cert: fs.readFileSync("/etc/letsencrypt/live/portal.artisandoc.com/fullchain.pem"),
